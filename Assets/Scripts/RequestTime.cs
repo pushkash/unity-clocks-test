@@ -34,6 +34,17 @@ public class RequestTime : MonoBehaviour
         {
             yield return webRequest.SendWebRequest();
 
+            switch (webRequest.result)
+            {
+                case UnityWebRequest.Result.ConnectionError:
+                case UnityWebRequest.Result.DataProcessingError:
+                    Debug.LogError("Error: " + webRequest.error);
+                    break;
+                case UnityWebRequest.Result.ProtocolError:
+                    Debug.LogError("Http error: " + webRequest.error);
+                    break;
+            }
+
             string response = webRequest.downloadHandler.text;
             string time = JsonUtility.FromJson<Time>(response).unixtime;
             long timeDouble = long.Parse(time);
